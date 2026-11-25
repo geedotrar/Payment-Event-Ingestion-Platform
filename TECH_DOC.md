@@ -1,7 +1,7 @@
 ## 1. Ringkasan Project
 
-Project ini adalah POC optimasi API integrasi pembayaran berbasis microservices untuk memenuhi requirement pada dokumen soal.
-Scope POC ini bukan membangun core switching/payment engine end-to-end, tetapi fokus pada API layer yang diminta di dokumen:
+Project ini adalah POC optimasi API integrasi pembayaran berbasis microservices untuk arsitektur transaksi modern berkinerja tinggi.
+Scope platform ini bukan membangun core switching/payment engine end-to-end, tetapi fokus pada API layer integrasi pembayaran:
 - Autentikasi aman dan efisien.
 - Proses notifikasi transaksi menggunakan mekanisme asynchronous.
 - Pengecekan status transaksi tanpa membebani server.
@@ -121,9 +121,9 @@ Menghadirkan sistem pembayaran elektronik dengan fokus pada:
 
 ---
 
-## 7. Pemetaan ke Problem Statement
+## 7. Analisis Masalah & Solusi Arsitektur
 
-### **Problem 1: Brute-force Autentikasi** 
+### **1. Proteksi Brute-force Autentikasi** 
 
 **Masalah:**
 - Tidak ada batasan login attempts
@@ -145,7 +145,7 @@ Menghadirkan sistem pembayaran elektronik dengan fokus pada:
 
 ---
 
-### **Problem 2: Notifikasi Timeout (Synchronous Logging)** 
+### **2. Eliminasi Notifikasi Timeout (Asynchronous Event Processing)** 
 
 **Masalah:**
 - Proses logging berjalan synchronous dalam response handler
@@ -167,7 +167,7 @@ Menghadirkan sistem pembayaran elektronik dengan fokus pada:
 
 ---
 
-### **Problem 3: Check Status - DB Overload** 
+### **3. Optimasi Pengecekan Status Transaksi (High-Throughput Caching)** 
 
 **Masalah:**
 - Setiap check-status query ke database
@@ -193,7 +193,7 @@ INDEX: (bill_number, created_date)
 
 ---
 
-### **Problem 4: Bug Ratio Tinggi di Development** 
+### **4. Reduksi Bug Ratio & Kualitas Kode** 
 
 **Masalah:**
 - Architecture tidak jelas
@@ -213,7 +213,7 @@ INDEX: (bill_number, created_date)
 
 ---
 
-### **Problem 5: Deployment Manual** 
+### **5. Otomasi Deployment & Reproducibility** 
 
 **Masalah:**
 - Step-by-step manual deployment
@@ -226,10 +226,10 @@ INDEX: (bill_number, created_date)
 Steps:
 1. docker compose up -d postgres redis kafka
 2. run migrations:
-  docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/migrations/auth/001_init_auth.sql
-  docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/migrations/payment/001_init_payment.sql
-  docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/migrations/payment/002_optimize_indexes_payment.sql
-  docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/migrations/payment/003_transaction_event_logs.sql
+  docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/migrations/auth/001_init_auth.sql
+  docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/migrations/payment/001_init_payment.sql
+  docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/migrations/payment/002_optimize_indexes_payment.sql
+  docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/migrations/payment/003_transaction_event_logs.sql
 3. docker compose seed data
 4. docker compose up auth-service payment-service
 5. curl health check
@@ -256,7 +256,7 @@ docker compose up -d --build
 ### **auth-services/.env**
 ```env
 AUTH_PORT=9090
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/spe?sslmode=disable
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/payment_db?sslmode=disable
 REDIS_ADDR=localhost:6379
 JWT_SECRET=super-secret-jwt-key
 JWT_TTL_MINUTES=15
@@ -268,11 +268,11 @@ AUTH_LOGIN_ENABLED=true
 ### **payment-services/.env**
 ```env
 PAYMENT_PORT=9091
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/spe?sslmode=disable
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/payment_db?sslmode=disable
 REDIS_ADDR=localhost:6379
 KAFKA_BROKERS=kafka:9092
 JWT_SECRET=super-secret-jwt-key
-MERCHANT_API_KEY=speskilltest
+MERCHANT_API_KEY=payment-secret-key-2026
 ```
 
 ---
@@ -295,7 +295,7 @@ MERCHANT_API_KEY=speskilltest
 
 ## 11. Kesimpulan
 
-**SPE** adalah sistem pembayaran elektronik yang dirancang dengan **modern architecture** untuk menyelesaikan 5 masalah utama:
+**Payment Event Ingestion Platform** adalah sistem pembayaran elektronik yang dirancang dengan **modern architecture** untuk menyelesaikan 5 tantangan utama:
 
 | # | Masalah | Solusi | Status |
 |---|---------|--------|--------|

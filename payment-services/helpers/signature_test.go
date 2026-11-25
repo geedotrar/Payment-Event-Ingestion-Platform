@@ -8,7 +8,7 @@ import (
 
 func TestSignHMACSHA512_Consistency(t *testing.T) {
 	payload := "REQ001:RRN001:MERCHANT001"
-	key := "speskilltest"
+	key := "payment-secret-key-2026"
 
 	result1 := SignHMACSHA512(payload, key)
 	result2 := SignHMACSHA512(payload, key)
@@ -18,7 +18,7 @@ func TestSignHMACSHA512_Consistency(t *testing.T) {
 }
 
 func TestSignHMACSHA512_DifferentPayloadsProduceDifferentResults(t *testing.T) {
-	key := "speskilltest"
+	key := "payment-secret-key-2026"
 
 	result1 := SignHMACSHA512("payload-A", key)
 	result2 := SignHMACSHA512("payload-B", key)
@@ -37,7 +37,7 @@ func TestSignHMACSHA512_DifferentKeysProduceDifferentResults(t *testing.T) {
 
 func TestSignHMACSHA512_ActualValue(t *testing.T) {
 	payload := "REQ-001:RRN-001:008800223497"
-	key := "speskilltest"
+	key := "payment-secret-key-2026"
 
 	result := SignHMACSHA512(payload, key)
 

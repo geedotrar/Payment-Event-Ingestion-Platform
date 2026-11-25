@@ -206,7 +206,7 @@ func TestGetMerchant_Success(t *testing.T) {
 	merchant := &models.Merchant{
 		MerchantID: "M001",
 		Name:       "Test Merchant",
-		SigningKey: "speskilltest",
+		SigningKey: "payment-secret-key-2026",
 		IsActive:   true,
 	}
 

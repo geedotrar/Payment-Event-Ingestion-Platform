@@ -1,9 +1,9 @@
-# SPE - Payment Services POC
+# Payment Event Ingestion Platform
 
 MORE DETAILS:
-- read: https://github.com/geedotrar/spe-services/blob/master/TECH_DOC.md
+- read: [TECH_DOC.md](TECH_DOC.md)
 
-Payment Services POC:
+Payment Event Ingestion Platform:
 - Auth service on port 9090
 - Payment service on port 9091
 - PostgreSQL, Redis, and Kafka
@@ -11,7 +11,7 @@ Payment Services POC:
 ## Project Structure
 
 ```text
-SPE/
+payment-event-ingestion/
 |- auth-services/
 |- payment-services/
 |- database/
@@ -19,7 +19,7 @@ SPE/
 |  |  |- auth/
 |  |  |- payment/
 |  |- seed/
-|- postman/
+|  |- postman/
 |- docker-compose.yml
 ```
 
@@ -41,26 +41,26 @@ docker compose up -d --build postgres redis kafka
 ### 2. Create database if not exists
 
 ```bash
-docker compose exec -T postgres psql -U postgres -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='spe'" | grep -q 1 || docker compose exec -T postgres psql -U postgres -d postgres -c "CREATE DATABASE spe;"
+docker compose exec -T postgres psql -U postgres -d postgres -tc "SELECT 1 FROM pg_database WHERE datname='payment_db'" | grep -q 1 || docker compose exec -T postgres psql -U postgres -d postgres -c "CREATE DATABASE payment_db;"
 ```
 
 ### 3. Run migrations
 
 ```bash
 # Auth schema
-docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/migrations/auth/001_init_auth.sql
+docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/migrations/auth/001_init_auth.sql
 
 # Payment schema
-docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/migrations/payment/001_init_payment.sql
-docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/migrations/payment/002_optimize_indexes_payment.sql
-docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/migrations/payment/003_transaction_event_logs.sql
+docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/migrations/payment/001_init_payment.sql
+docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/migrations/payment/002_optimize_indexes_payment.sql
+docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/migrations/payment/003_transaction_event_logs.sql
 ```
 
 ### 4. Run seed
 
 ```bash
-docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/seed/auth_seed.sql
-docker compose exec -T postgres psql -U postgres -d spe -f /dev/stdin < database/seed/payment_seed.sql
+docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/seed/auth_seed.sql
+docker compose exec -T postgres psql -U postgres -d payment_db -f /dev/stdin < database/seed/payment_seed.sql
 ```
 
 ### 5. Start app services
@@ -91,7 +91,7 @@ docker compose up -d --build
 | Variable | Default | Description |
 |---|---|---|
 | AUTH_PORT | 9090 | Auth service port |
-| DATABASE_URL | postgres://postgres:postgres@localhost:5432/spe?sslmode=disable | PostgreSQL connection string |
+| DATABASE_URL | postgres://postgres:postgres@localhost:5432/payment_db?sslmode=disable | PostgreSQL connection string |
 | REDIS_ADDR | localhost:6379 | Redis address |
 | JWT_SECRET | super-secret-jwt-key | JWT signing secret |
 | JWT_TTL_MINUTES | 15 | Token lifetime in minutes |
@@ -104,7 +104,7 @@ docker compose up -d --build
 | Variable | Default | Description |
 |---|---|---|
 | PAYMENT_PORT | 8081 | Payment service port |
-| DATABASE_URL | postgres://postgres:postgres@localhost:5432/spe?sslmode=disable | PostgreSQL connection string |
+| DATABASE_URL | postgres://postgres:postgres@localhost:5432/payment_db?sslmode=disable | PostgreSQL connection string |
 | REDIS_ADDR | localhost:6379 | Redis address |
 | JWT_SECRET | super-secret-jwt-key | Must match auth service JWT secret |
 | KAFKA_BROKERS | localhost:9092 | Kafka broker |

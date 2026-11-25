@@ -25,7 +25,7 @@ func Load() Config {
 
 	return Config{
 		Port:                getEnv("PAYMENT_PORT", "8081"),
-		DatabaseURL:         getEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/spe?sslmode=disable"),
+		DatabaseURL:         getEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/payment_db?sslmode=disable"),
 		RedisAddr:           getEnv("REDIS_ADDR", "localhost:6379"),
 		RedisPassword:       getEnv("REDIS_PASSWORD", ""),
 		JWTSecret:           getEnv("JWT_SECRET", "super-secret-jwt-key"),

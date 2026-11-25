@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "d34a8114-0825-4b04-afad-bf9301159b56",
-    "name": "SPE Payment POC",
+    "name": "Payment Event Ingestion Platform",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "45524217",
     "_collection_link": "https://go.postman.co/collection/45524217-d34a8114-0825-4b04-afad-bf9301159b56?source=collection_link"
@@ -114,7 +114,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"request_id\": \"XwVjF5zfuHhrDZuw\",\n  \"rrn\": \"123456789012\",\n  \"merchant_id\": \"008800223497\",\n  \"key\": \"speskilltest\"\n}"
+          "raw": "{\n  \"request_id\": \"XwVjF5zfuHhrDZuw\",\n  \"rrn\": \"123456789012\",\n  \"merchant_id\": \"008800223497\",\n  \"key\": \"payment-secret-key-2026\"\n}"
         },
         "url": {
           "raw": "{{payment_base_url_dev}}/dev/signature",
@@ -141,7 +141,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"bill_number\": \"12345678901234567890\",\n  \"key\": \"speskilltest\"\n}"
+          "raw": "{\n  \"bill_number\": \"12345678901234567890\",\n  \"key\": \"payment-secret-key-2026\"\n}"
         },
         "url": {
           "raw": "{{payment_base_url_dev}}/dev/signature",
@@ -246,11 +246,11 @@
     },
     {
       "key": "notification_signature",
-      "value": "hvBOwXntUjXfUf9Zjvd8hFttRFpQJ0hUNguVFYsNfheMKaAS9ATiDogdTDVPxr3Kks81M6uEegBtiBVNc7DZeg=="
+      "value": "LTVrcUlEKoNwDyrBOOBfvemM7NtNzqubO6pRnK/Re1Bg32r62lc/BOIJHa5Eh5oKZfQYgYncwEj41ZME1iU0Kw=="
     },
     {
       "key": "check_status_signature",
-      "value": "wFNj9/5f3ATl4DPkXXH4UU3m3y3ZNfG9gID1EYO+DXJcsF+lLs5guZR3uu0HJ/ECn+/KVwG42kMUVOEOuvZlgQ=="
+      "value": "pE9/sSBX8yyspHSnvXcJR7NqZ3xj0+fDUYKsT0/tNBa+007MfHzwcGMrYkD990zG90HvfJB5r9gbLrDC8aCpkw=="
     }
   ]
 }
